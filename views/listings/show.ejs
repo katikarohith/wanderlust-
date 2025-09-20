@@ -3,15 +3,14 @@
    <div class="container">
     <div class="row mt-3">
 <div class="col-8 offset-3 ">
- <h3>listings details</h3>
+ <h3><%=listening.title %></h3>
 </div>
 
         <div class="col-6 offset-3 show-card">
-<div class="card" >
+<div class="card listing-card" >
   <img src="<%= listening.image %>" class="card-img-top show-img " alt="...">
   <div class="card-body">
     <p class="card-text"> 
-        <b><%=listening.title %></b> <br>
         <%=listening.description %> <br>
                     &#8377; <%= listening.price ?listening.price.toLocaleString("en-IN"):"N/A" %><br>
          <%=listening.location%> <br>
@@ -28,5 +27,53 @@
     <br><br>     
 </form>
 </div> </div>
+
+<div class="col-8 offset-3 mb-3">
+  <hr style=" background-color: black;" > 
+  <h4>Leave a review</h4>
+<form action="/listings/<%= listening._id %>/reviews" method="post" novalidate class="needs-validation">
+  <div class="mb-3 mt-3 ">
+   <label for="rating" class="form-label">Rating</label>
+<input type="range"min="1" max="5" class="form-range"    name="review[rating]" id="rating">
+  </div>
+
+  <div class="mb-3 mt-3">
+    <label for="comment">Comments</label>
+    <textarea
+      name="review[comment]"
+      id="comment"
+      cols="30"
+      rows="5"
+      class="form-control"
+      required
+    ></textarea>
+    <div class="invalid-feedback">
+please add some comments for review
+    </div>
+  </div>
+
+  <button class="btn btn-dark">Submit</button>
+</form>
+<hr style=" background-color: black;" > 
+<p><b>All Reviews</b></p>
+<div class="row">
+  <% for (review of listening.reviews) { %>
+    <div class="card col-5 ms-3 mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Jane Doe</h5>
+        <p class="card-text"><%= review.comment %></p>
+        <p class="card-text"><%= review.rating %> stars</p>
+      </div>
+      <br>
+      <form class="mb-3" method="post" action="/listings/<%= listening._id %>/reviews/<%=review._id%>?_method=DELETE">
+      <button class="btn btn-dark btn-sm">Delete</button>
+    </form>
+    </div>
+    
+  <% } %>
+</div>
+</div>
+
+
 </div>
 </body>
