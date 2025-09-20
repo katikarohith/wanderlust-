@@ -167,12 +167,6 @@ res.redirect(`/listings/${listing._id}`);
 
 }));
 
-app.delete("/listings/:id/reviews/:reviewId",asyncwrap(async(req,res)=>{
-
-
-}));
-
-
 app.delete( "/listings/:id/reviews/:reviewId", asyncwrap(async (req, res) => {
     let { id, reviewId } = req.params;
 
