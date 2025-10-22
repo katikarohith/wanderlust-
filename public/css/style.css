@@ -1,5 +1,6 @@
 
 
+
 body{
     font-family:"Plus Jakarta Sans", sans-serif !important ;
     display: flex !important;
@@ -106,4 +107,28 @@ flex: 1 !important;
 .show-card{
     padding-left: 0;
     padding-right: 0;
+}
+#map{
+    height:400px;
+    width:80vh;
+}
+.airbnb-marker {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  background-color: #ff385c;   /* Airbnb pink-red color */
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.airbnb-marker::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: white;
+  top: 9px;
+  left: 9px;
+  border-radius: 50%;
 }

@@ -1,50 +1,81 @@
-
 const { ref } = require("joi");
 const mongoose = require("mongoose");
 const Review = require("./reviews.js");
+const User = require("./user.js");
 
-const Schema= mongoose.Schema;
+const Schema = mongoose.Schema;
 
 const listingSchema = new Schema({
+  title: {
+    type: String,
+    required: true,
+  },
 
-title: {
+  description: {
+    type: String,
+  },
 
-type: String,
+  image: {
+    url: String,
+    filename: String,
+  },
 
-required: true,
-},
+  price: Number,
 
-description: {
-type: String,
-},
-image: {
-    type:String,
-    default:"https://media.istockphoto.com/id/1442179368/photo/maldives-island.jpg?s=612x612&w=0&k=20&c=t38FJQ6YhyyZGN91A8tpn3nz9Aqcy_aXolImsOXOZ34=",
-set: (v) =>v===""?"https://media.istockphoto.com/id/1442179368/photo/maldives-island.jpg?s=612x612&w=0&k=20&c=t38FJQ6YhyyZGN91A8tpn3nz9Aqcy_aXolImsOXOZ34=":v,
-},
-price: Number,
+  location: String,
+  country: String,
 
-location: String,
+  category: {
+    type: String,
+    required: true,
+    enum: [
+      "Trending",
+      "Rooms",
+      "Iconic Cities",
+      "Mountains",
+      "Castles",
+      "Amazing Pools",
+      "Camping",
+      "Farms",
+      "Arctic",
+      "Domes",
+      "Boats",
+    ],
+  },
 
-country: String,
-reviews:[
+  reviews: [
     {
-        type: Schema.Types.ObjectId,
-        ref: "Review",
+      type: Schema.Types.ObjectId,
+      ref: "Review",
     },
-],
+  ],
 
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
+
+  geometry: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      required: true,
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
+  },
 });
+
 listingSchema.post("findOneAndDelete", async (listing) => {
   if (listing) {
     await Review.deleteMany({
-      _id: { $in: listing.reviews }
+      _id: { $in: listing.reviews },
     });
   }
 });
 
-
-const Listing =mongoose.model("Listing", listingSchema);
+const Listing = mongoose.model("Listing", listingSchema);
 
 module.exports = Listing;
-

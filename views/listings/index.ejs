@@ -1,27 +1,284 @@
-<% layout("/layouts/boilerplate.ejs") %>
+<% layout("/layouts/boilerplate.ejs") %> 
+
+<style>
+#filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.filter {
+    text-align: center;
+    margin-right: 2rem;
+    margin-top: 2rem;
+    opacity: 0.7;
+    font-size: 0.8rem;
+}
+
+.filter:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.filter.active {
+    opacity: 1;
+    border-bottom: 2px solid black;
+}
+
+.tax-info{
+  display: none;
+}
+
+.tax-toggle {
+    border: 1px solid black;
+    border-radius: 1rem;
+    height: 3.25rem;
+    width: 300px;
+    padding: 1rem;
+    margin-left: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ===== MEDIA QUERIES ===== */
+
+/* Small screens (mobile) */
+@media (max-width: 576px) {
+    #filters {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filter {
+        margin-right: 1rem;
+        font-size: 0.75rem;
+    }
+
+    .tax-toggle {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 1rem;
+        justify-content: flex-start;
+        padding: 0.5rem 1rem;
+    }
+}
+
+/* Medium screens (tablet) */
+@media (min-width: 577px) and (max-width: 992px) {
+    #filters {
+        flex-wrap: wrap;
+    }
+
+    .filter {
+        margin-right: 1.5rem;
+        font-size: 0.78rem;
+    }
+
+    .tax-toggle {
+        width: 250px;
+        margin-left: 1rem;
+        margin-top: 1rem;
+    }
+}
+
+/* Optional: Adjust listing card spacing on small screens */
+@media (max-width: 768px) {
+    .listing-card-wrapper {
+        margin-bottom: 1rem;
+    }
+}
+
+
+</style>
+
 <body>
-    <!-- <form action="/listings/new">
-        <button> create new listing</button>
-    </form> -->
 <div class="container-fluid px-5">
-    <h1>ALL Listings</h1> <br>
-  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-2">
-    <% for(let listing of alllistings) { %>
-        <a href="/listings/<%=listing._id%> " class="listing-links">
-      <div class="col">
+
+<div id="filters">
+    <!-- Added "All" icon -->
+    <div class="filter active" data-category="all">
+        <div><i class="fa-solid fa-globe"></i></div>
+        <p>All</p>
+    </div>
+
+    <div class="filter" data-category="Trending">
+        <div><i class="fa-solid fa-fire"></i></div>
+        <p>Trending</p>
+    </div>
+
+    <div class="filter" data-category="Rooms">
+        <div><i class="fa-solid fa-bed"></i></div>
+        <p>Rooms</p>
+    </div>
+
+    <div class="filter" data-category="Iconic Cities">
+        <div><i class="fa-solid fa-mountain-city"></i></div>
+        <p>Iconic Cities</p>
+    </div>
+
+    <div class="filter" data-category="Mountains">
+        <div><i class="fa-solid fa-mountain"></i></div>
+        <p>Mountains</p>
+    </div>
+
+    <div class="filter" data-category="Castles">
+        <div><i class="fa-brands fa-fort-awesome"></i></div>
+        <p>Castles</p>
+    </div>
+
+    <div class="filter" data-category="Amazing Pools">
+        <div><i class="fa-solid fa-person-swimming"></i></div>
+        <p>Amazing Pools</p>
+    </div>
+
+    <div class="filter" data-category="Camping">
+        <div><i class="fa-solid fa-campground"></i></div>
+        <p>Camping</p>
+    </div>
+
+    <div class="filter" data-category="Farms">
+        <div><i class="fa-solid fa-cow"></i></div>
+        <p>Farms</p>
+    </div>
+
+    <div class="filter" data-category="Arctic">
+        <div><i class="fa-solid fa-snowflake"></i></div>
+        <p>Arctic</p>
+    </div>
+
+    <div class="filter" data-category="Domes">
+        <div><i class="fa-solid fa-igloo"></i></div>
+        <p>Domes</p>
+    </div>
+
+    <div class="filter" data-category="Boats">
+        <div><i class="fa-solid fa-ferry"></i></div>
+        <p>Boats</p>
+    </div>
+
+    <div class="tax-toggle">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
+        <label class="form-check-label" for="switchCheckDefault">Display total after taxes</label>
+      </div>
+    </div>
+</div>
+
+<!-- Listings -->
+<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-2 mt-3" id="listing-container">
+  <% for(let listing of alllistings) { %>
+    <a href="/listings/<%=listing._id%>" class="listing-links col listing-card-wrapper" data-category="<%= listing.category %>">
+      <div class="card h-100 listing-card">
+        <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" style="height: 20rem;" />
+        <div class="card-img-overlay"></div>
+        <div class="card-body">
+          <p class="card-text">
+            <b><%= listing.title %></b><br />
+            &#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> / night
+            <span class="tax-info">&nbsp;&nbsp; + 18% GST</span>
+          </p>
+          <!--  optional small line showing category -->
+          <!-- <p class="small mb-0" style="color: #333; font-weight: 500;">
+  🏷️ Category: <%= listing.category %>
+</p> -->
+
+        </div>
+      </div>
+    </a>
+  <% } %>
+</div>
+</div>
+
+<!-- Scripts -->
+<script>
+  // tax toggle
+  let taxSwitch = document.getElementById("switchCheckDefault");
+  taxSwitch.addEventListener("click", () => {
+      let taxInfo = document.getElementsByClassName("tax-info");
+      for (let info of taxInfo) {
+          info.style.display = info.style.display !== "inline" ? "inline" : "none";
+      }
+  });
+
+  // category filtering
+  const filters = document.querySelectorAll(".filter");
+  const listings = document.querySelectorAll(".listing-card-wrapper");
+
+  filters.forEach(filter => {
+    filter.addEventListener("click", () => {
+      // remove active from all
+      filters.forEach(f => f.classList.remove("active"));
+      filter.classList.add("active");
+
+      const category = filter.dataset.category;
+
+      listings.forEach(listing => {
+        if (category === "all" || listing.dataset.category === category) {
+          listing.style.display = "block";
+        } else {
+          listing.style.display = "none";
+        }
+      });
+    });
+  });
+</script>
+
+
+
+<!-- for searching -->
+<script>
+const searchInput = document.getElementById("liveSearchInput");
+const searchBtn = document.getElementById("liveSearchBtn");
+const listingContainer = document.getElementById("listing-container");
+
+async function performSearch() {
+  const query = searchInput.value.trim();
+  const res = await fetch(`/listings/search?query=${encodeURIComponent(query)}`);
+  const listings = await res.json();
+
+  listingContainer.innerHTML = "";
+
+  if (!listings.length) {
+    listingContainer.innerHTML = `
+      <div class="col-12 text-center mt-5">
+        <h4>No listings found for "<b>${query}</b>" 😢</h4>
+      </div>`;
+    return;
+  }
+
+  listings.forEach(listing => {
+    const html = `
+      <a href="/listings/${listing._id}" class="listing-links col listing-card-wrapper" data-category="${listing.category}">
         <div class="card h-100 listing-card">
-          <img src="<%= listing.image %>" class="card-img-top" alt="listing_image" style="height: 20rem;" />
-          <div class="card-img-overlay"> </div>
+          <img src="${listing.image?.url || 'https://via.placeholder.com/300'}" class="card-img-top" alt="listing_image" style="height: 20rem;" />
           <div class="card-body">
             <p class="card-text">
-              <b><%= listing.title %> </b><br />
-              &#8377; <%= listing.price ?listing.price.toLocaleString("en-IN"):"N/A" %> / night
+              <b>${listing.title}</b><br />
+              ₹ ${listing.price?.toLocaleString("en-IN") || 'N/A'} / night
             </p>
           </div>
         </div>
-      </div> </a>
-    <% } %>
-  </div>
-</div>
+      </a>`;
+    listingContainer.insertAdjacentHTML("beforeend", html);
+  });
+}
+
+// when user types
+searchInput.addEventListener("input", () => {
+  clearTimeout(window.searchTimeout);
+  window.searchTimeout = setTimeout(performSearch, 300);
+});
+
+// when user clicks search
+searchBtn.addEventListener("click", performSearch);
+</script>
+
+
+
+
+
+
 
 </body>
