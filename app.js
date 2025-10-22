@@ -15,7 +15,8 @@ const listingRoutes = require("./routes/listings");
 const reviewRoutes = require("./routes/reviews");
 const userRoutes = require("./routes/user");
 const port = 8080;
-const mongurl = "mongodb://127.0.0.1:27017/wonderlust";
+// const mongurl = "mongodb://127.0.0.1:27017/wonderlust";
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
@@ -25,28 +26,42 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "/public")));
 const cookieParser=require("cookie-parser");
 const session=require("express-session");
+const MongoStore=require("connect-mongo");
 const flash=require("connect-flash");
 const passport=require("passport");
 const Localstrategy=require("passport-local");
 const User=require("./models/user.js");
 
 
-
+const dbUrl = process.env.MONGO_URL;
+;
 
 main()
   .then(() => console.log("connected"))
   .catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect(mongurl);
+  await mongoose.connect(dbUrl);
 }
 app.listen(port, () => {
   console.log("server is listening");
 });
 
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  crypto: {
+    secret: process.env.SECRET,
+  },
+  touchAfter: 24 * 3600,
+});
+
+store.on("error", (err) => {
+  console.log("ERROR in MONGO SESSION STORE", err);
+});
 
 const sessionOptions = {
-  secret: "mysupersecretstring",
+  store,
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -98,3 +113,12 @@ app.use((err, req, res, next) => {
   let { status = 500, message = "some thing went wrong" } = err;
   res.status(status).render("listings/error.ejs", { message });
 });
+
+/*app.get("/demouser", async (req, res) => {
+  let fakeUser = new User({
+    email: "student@gmail.com",
+    username: "delta-student",
+  });
+  let registeredUser = await User.register(fakeUser, "helloworld");
+  res.send(registeredUser);
+});*/
