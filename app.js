@@ -14,7 +14,7 @@ const ExpressError = require("./utils/expresserror.js");
 const listingRoutes = require("./routes/listings");
 const reviewRoutes = require("./routes/reviews");
 const userRoutes = require("./routes/user");
-const port = 8080;
+const PORT = process.env.PORT || 3000;
 // const mongurl = "mongodb://127.0.0.1:27017/wonderlust";
 
 app.set("view engine", "ejs");
@@ -88,15 +88,6 @@ app.use((req,res,next)=>{
   next();
 });
 
-
-/*app.get("/demouser", async (req, res) => {
-  let fakeUser = new User({
-    email: "student@gmail.com",
-    username: "delta-student",
-  });
-  let registeredUser = await User.register(fakeUser, "helloworld");
-  res.send(registeredUser);
-});*/
 
 
 
